@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Ardalis.GuardClauses" Version="5.0.0"/>
+        <PackageReference Include="Ardalis.Specification" Version="8.0.0"/>
+        <PackageReference Include="Vogen" Version="6.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../Shared\Shared.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="AuthorAggregate\Specifications\"/>
+        <Folder Include="StoryAggregate\Specifications\"/>
+    </ItemGroup>
+</Project>
