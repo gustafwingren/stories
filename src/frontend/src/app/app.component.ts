@@ -10,9 +10,9 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { AuthService } from './services/auth.service';
 import { MenuComponent } from './presentation/shared/menu/menu.component';
 import { RouterOutlet } from '@angular/router';
+import { ProfileStore } from './data/profile/profile.store';
 
 @Component({
 	selector: 'app-root',
@@ -31,8 +31,9 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
 	title = 'frontend';
-	authService = inject(AuthService);
+	profileStore = inject(ProfileStore);
 	private breakpointObserver = inject(BreakpointObserver);
+
 	isHandset: Signal<boolean> = toSignal(
 		this.breakpointObserver.observe(Breakpoints.Handset).pipe(
 			map((result) => result.matches),
