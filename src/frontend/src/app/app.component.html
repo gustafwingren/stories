@@ -1,18 +1,18 @@
 <mat-sidenav-container class="sidenav-container">
 
   <mat-sidenav #drawer
-               [attr.role]="(isHandset()) ? 'dialog' : 'navigation'" [hidden]="authService.isLoggedIn()"
+               [attr.role]="(isHandset()) ? 'dialog' : 'navigation'" [hidden]="profileStore.isLoggedIn()"
                [mode]="(isHandset()) ? 'over' : 'side'"
                [opened]="!(isHandset())"
                class="sidenav"
                fixedInViewport>
-    @if (authService.isLoggedIn()) {
+    @if (profileStore.isLoggedIn()) {
       <app-menu></app-menu>
     }
 
   </mat-sidenav>
   <mat-sidenav-content>
-    @if (isHandset() && authService.isLoggedIn()) {
+    @if (isHandset() && profileStore.isLoggedIn()) {
       <mat-toolbar>
         <button
           type="button"
