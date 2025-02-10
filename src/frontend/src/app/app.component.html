@@ -1,30 +1,27 @@
-<mat-sidenav-container class="sidenav-container">
+<div class="sidenav-container">
 
-  <mat-sidenav #drawer
-               [attr.role]="(isHandset()) ? 'dialog' : 'navigation'" [hidden]="profileStore.isLoggedIn()"
-               [mode]="(isHandset()) ? 'over' : 'side'"
-               [opened]="!(isHandset())"
-               class="sidenav"
-               fixedInViewport>
+  <div #drawer
+       [attr.role]="(isHandset()) ? 'dialog' : 'navigation'" [hidden]="profileStore.isLoggedIn()"
+       class="sidenav"
+       fixedInViewport>
     @if (profileStore.isLoggedIn()) {
       <app-menu></app-menu>
     }
 
-  </mat-sidenav>
-  <mat-sidenav-content>
+  </div>
+  <div>
     @if (isHandset() && profileStore.isLoggedIn()) {
-      <mat-toolbar>
+      <div>
         <button
           type="button"
           aria-label="Toggle sidenav"
-          mat-icon-button
-          (click)="drawer?.toggle()">
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          mat-icon-button>
+          <i aria-label="Side nav toggle icon">menu</i>
         </button>
-      </mat-toolbar>
+      </div>
     }
     <div class="content">
       <router-outlet></router-outlet>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </div>
+</div>

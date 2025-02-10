@@ -1,14 +1,8 @@
-import {Component} from '@angular/core';
-import {MatListModule} from '@angular/material/list';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css',
-  standalone: true,
-  imports: [
-    MatListModule,
-  ]
+	selector: 'app-menu',
+	templateUrl: './menu.component.html',
+	styleUrl: './menu.component.css',
 })
-export class MenuComponent {
-}
+export class MenuComponent {}

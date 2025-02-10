@@ -1,22 +1,15 @@
-import {Component, inject} from '@angular/core';
-import {AuthService} from "../../../services/auth.service";
-import {MatFabButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  selector: 'app-login',
-  imports: [
-    MatFabButton,
-    MatIcon,
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+	selector: 'app-login',
+	templateUrl: './login.component.html',
+	styleUrl: './login.component.css',
 })
 export class LoginComponent {
+	authService: AuthService = inject(AuthService);
 
-  authService: AuthService = inject(AuthService);
-
-  loginRedirect() {
-    this.authService.login();
-  }
+	loginRedirect() {
+		this.authService.login();
+	}
 }
