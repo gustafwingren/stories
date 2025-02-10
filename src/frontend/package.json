@@ -23,9 +23,10 @@
     "@azure/msal-angular": "^4.0.2",
     "@azure/msal-browser": "^4.0.2",
     "@ngrx/signals": "^19.0.1",
-    "@tailwindcss/postcss": "^4.0.3",
+    "@tailwindcss/postcss": "^4.0.5",
     "postcss": "^8.5.1",
     "rxjs": "~7.8.0",
+    "tailwindcss": "^4.0.5",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
