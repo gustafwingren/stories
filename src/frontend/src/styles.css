@@ -1,1 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --color-*: initial;
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-dark: #140000;
+  --color-white-bg: #fff6e5;
+
+  --color-dark-pink: #D07A7A;
+  --color-light-pink: #E6C8BD;
+  --color-light-blue: #C4D0D3;
+  --color-dark-blue: #5C757B;
+  --color-beige: #C9B2AD;
+
+  --font-logo: 'Gloria Hallelujah', serif;
+}
