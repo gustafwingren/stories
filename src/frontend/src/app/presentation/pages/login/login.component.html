@@ -1,9 +1,9 @@
-<h2>Välkommen</h2>
+<h2 class="my-8 text-2xl font-bold md:text-4xl">Välkommen</h2>
 <p>Detta är en tjänst för att skapa små korta barnböcker med hjälp av OpenAIs språkmodeller.</p>
 <p>För att komma åt allt så måste du logga in. Det gör du genom att trycka på knappen nedan och logga in med ditt
   Microsoftkonto.</p>
 
-<button (click)="loginRedirect()" extended mat-fab>
-  <mat-icon>login</mat-icon>
-  Logga in genom Microsoftkonto
-</button>
+<app-button (click)="loginRedirect()" [invert]="true" class="text-dark mt-8 block">
+  <app-login-icon />
+  Logga in genom Microsoft
+</app-button>

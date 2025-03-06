@@ -1,4 +1,13 @@
-<mat-nav-list>
-  <a href="#" mat-list-item>Books</a>
-  <a href="#" mat-list-item>Create a book</a>
-</mat-nav-list>
+<div class="w-full text-dark lg:text-dark-blue dark:text-white-bg lg:w-auto lg:pr-4 lg:pt-0">
+  <div class="flex flex-col gap-6 tracking-wider lg:flex-row lg:gap-0 lg:text-sm" id="links-group">
+    <a class="hover:text-dark flex transition dark:hover:text-beige md:px-4 py-4" routerLink="/profile">
+      <span>Books</span>
+    </a>
+  </div>
+</div>
+
+<div class="mt-12 lg:mt-0">
+  <app-button>
+    Create a book
+  </app-button>
+</div>

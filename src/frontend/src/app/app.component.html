@@ -1,30 +1,44 @@
-<mat-sidenav-container class="sidenav-container">
-
-  <mat-sidenav #drawer
-               [attr.role]="(isHandset()) ? 'dialog' : 'navigation'" [hidden]="profileStore.isLoggedIn()"
-               [mode]="(isHandset()) ? 'over' : 'side'"
-               [opened]="!(isHandset())"
-               class="sidenav"
-               fixedInViewport>
-    @if (profileStore.isLoggedIn()) {
-      <app-menu></app-menu>
-    }
-
-  </mat-sidenav>
-  <mat-sidenav-content>
-    @if (isHandset() && profileStore.isLoggedIn()) {
-      <mat-toolbar>
-        <button
-          type="button"
-          aria-label="Toggle sidenav"
-          mat-icon-button
-          (click)="drawer?.toggle()">
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-        </button>
-      </mat-toolbar>
-    }
-    <div class="content">
+<header>
+  <nav [attr.data-state]="headerStore.isMenuOpen() ? 'active': ''"
+       class="absolute group z-10 w-full border-b border-black/5 dark:border-white/5 lg:border-transparent">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+      <div class="relative flex flex-wrap items-center justify-between gap-6 py-3 pb-4 md:gap-0 md-py-4">
+        <div class="relative z-20 flex w-full justify-between md:px-0 lg:w-fit">
+          <a aria-label="logo" class="flex items-center justify-between space-x-1" href="#">
+            <div aria-hidden="true" class="flex space-x-1 w-16 h-10 relative">
+              <img alt="logo" fill ngSrc="/assets/images/logo.svg" />
+            </div>
+            <span class="font-logo text-3xl mt-3 font-bold text-dark-pink dark:text-dark-pink">Drömsagor</span>
+          </a>
+          @if (profileStore.isLoggedIn()) {
+            <div class="relative flex max-h-10 items-center lg:hidden">
+              <button (click)="headerStore.toggleMenu()" aria-label="hamburger"
+                      class="relative -mr-6 p-6 active:scale-95 duration-300">
+                <div
+                  aria-hidden="true"
+                  class="m-auto h-0.5 w-5 rounded bg-dark transition duration-300 dark:bg-white origin-top group-data-[state=active]:rotate-45 group-data-[state=active]:translate-y-1.5"></div>
+                <div aria-hidden="true"
+                     class="m-auto mt-2 h-0.5 w-5 rounded bg-dark transition duration-300 dark:bg-white origin-bottom group-data-[state=active]:-rotate-45 group-data-[state=active]:-translate-y-1"></div>
+              </button>
+            </div>
+          }
+        </div>
+        @if (profileStore.isLoggedIn()) {
+          <div aria-hidden="true"
+               class="fixed inset-0 z-10 h-screen w-screen origin-bottom scale-y-0 bg-white-bg/70 backdrop-blur-2xl transition duration-500 group-data-[state=active]:origin-top group-data-[state=active]:scale-y-100 dark:bg-dark/70 lg:hidden"
+          ></div>
+          <app-menu
+            class="invisible absolute top-full left-0 z-20 w-full origin-top-right translate-y-1 scale-90 flex-col flex-wrap shadow-lg shadow-beige justify-end gap-6 rounded-3xl border border-light-pink bg-light-pink p-8 opacity-0 transition-all duration-300 dark:border-dark-pink dark:bg-dark-pink dark:shadow-md dark:shadow-light-pink/40 lg:visible lg:relative lg:flex lg:w-fit lg:translate-y-0 lg:scale-100 lg:flex-row lg:items-center lg:gap-0 lg:border-none lg:bg-transparent lg:p-0 lg:opacity-100 lg:shadow-none lg:dark:shadow-none lg:dark:bg-transparent group-data-[state=active]:visible group-data-[state=active]:scale-100 group-data-[state=active]:opacity-100 lg:group-data-[state=active]:translate-y-0">
+          </app-menu>
+        }
+      </div>
+    </div>
+  </nav>
+</header>
+<main class="space-y-40 mb-40">
+  <div class="relative py-20">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 text-dark dark:text-white-bg">
       <router-outlet></router-outlet>
     </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  </div>
+</main>
