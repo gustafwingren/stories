@@ -15,22 +15,22 @@ describe('AuthServiceService', () => {
 	let service: AuthService;
 	let profileStore = {
 		isLoggedIn: signal(false),
-		updateIsLoggedIn: jasmine.createSpy('updateIsLoggedIn'),
+		updateIsLoggedIn: jest.fn(),
 	};
 	let routerMock = {
-		navigate: jasmine.createSpy(),
+		navigate: jest.fn(),
 	};
 	let msalSubject: Subject<EventMessage>;
 	let inProgressSubject: BehaviorSubject<InteractionStatus>;
 	let msalServiceMock = {
-		loginRedirect: jasmine.createSpy(),
-		logoutRedirect: jasmine.createSpy(),
-		handleRedirectObservable: jasmine.createSpy().and.returnValue(new Subject()),
+		loginRedirect: jest.fn(),
+		logoutRedirect: jest.fn(),
+		handleRedirectObservable: jest.fn().mockReturnValue(new Subject()),
 		instance: {
-			enableAccountStorageEvents: jasmine.createSpy(),
-			getAllAccounts: jasmine.createSpy().and.returnValue([]),
-			getActiveAccount: jasmine.createSpy(),
-			setActiveAccount: jasmine.createSpy(),
+			enableAccountStorageEvents: jest.fn(),
+			getAllAccounts: jest.fn().mockReturnValue([]),
+			getActiveAccount: jest.fn(),
+			setActiveAccount: jest.fn(),
 		},
 	};
 
@@ -62,8 +62,7 @@ describe('AuthServiceService', () => {
 			],
 		});
 		service = TestBed.inject(AuthService);
-		routerMock.navigate.calls.reset();
-		profileStore.updateIsLoggedIn.calls.reset();
+		jest.clearAllMocks();
 	});
 
 	it('should be created', () => {
@@ -79,7 +78,7 @@ describe('AuthServiceService', () => {
 
 	describe('login', () => {
 		it('should login with redirect', () => {
-			msalServiceMock.loginRedirect.calls.reset();
+			jest.clearAllMocks();
 			service.login();
 			expect(msalServiceMock.loginRedirect).toHaveBeenCalled();
 		});
@@ -99,8 +98,7 @@ describe('AuthServiceService', () => {
 
 	describe('init', () => {
 		beforeEach(() => {
-			msalServiceMock.handleRedirectObservable.calls.reset();
-			msalServiceMock.instance.enableAccountStorageEvents.calls.reset();
+			jest.clearAllMocks();
 		});
 
 		it('should handle redirect observable and enable account storage events', async () => {
@@ -110,7 +108,7 @@ describe('AuthServiceService', () => {
 		});
 
 		it('should navigate to login when account is removed', async () => {
-			msalServiceMock.instance.getAllAccounts.and.returnValue([]);
+			msalServiceMock.instance.getAllAccounts.mockReturnValue([]);
 			await service.init();
 			// Ensure interaction status is None before triggering account events
 			inProgressSubject.next(InteractionStatus.None);
@@ -119,7 +117,7 @@ describe('AuthServiceService', () => {
 		});
 
 		it('should set login and update store when account is added', async () => {
-			msalServiceMock.instance.getAllAccounts.and.returnValue([{ username: 'test' }]);
+			msalServiceMock.instance.getAllAccounts.mockReturnValue([{ username: 'test' }]);
 			await service.init();
 			// Ensure interaction status is None before triggering account events
 			inProgressSubject.next(InteractionStatus.None);
@@ -129,8 +127,8 @@ describe('AuthServiceService', () => {
 
 		it('should set active account when none is active but accounts exist', async () => {
 			const accounts = [{ username: 'test' }];
-			msalServiceMock.instance.getAllAccounts.and.returnValue(accounts);
-			msalServiceMock.instance.getActiveAccount.and.returnValue(null);
+			msalServiceMock.instance.getAllAccounts.mockReturnValue(accounts);
+			msalServiceMock.instance.getActiveAccount.mockReturnValue(null);
 			
 			await service.init();
 			// Wait for next event loop to ensure subscriptions are set up
@@ -143,8 +141,8 @@ describe('AuthServiceService', () => {
 
 		it('should not set active account when one is already active', async () => {
 			const accounts = [{ username: 'test' }];
-			msalServiceMock.instance.getAllAccounts.and.returnValue(accounts);
-			msalServiceMock.instance.getActiveAccount.and.returnValue(accounts[0]);
+			msalServiceMock.instance.getAllAccounts.mockReturnValue(accounts);
+			msalServiceMock.instance.getActiveAccount.mockReturnValue(accounts[0]);
 			
 			await service.init();
 			// Wait for next event loop to ensure subscriptions are set up
