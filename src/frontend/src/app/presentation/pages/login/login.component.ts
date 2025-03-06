@@ -6,7 +6,7 @@ import { ButtonComponent } from '../../shared/button/button.component';
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
-	styleUrl: './login.component.css',
+	styleUrls: ['./login.component.css'],
 	imports: [LoginIconComponent, ButtonComponent],
 })
 export class LoginComponent {

@@ -7,7 +7,7 @@ import { RouterLink } from '@angular/router';
 	selector: 'app-button',
 	imports: [NgClass, LoginIconComponent, RouterLink],
 	templateUrl: './button.component.html',
-	styleUrl: './button.component.css',
+	styleUrls: ['./button.component.css'],
 })
 export class ButtonComponent {
 	invert = input<boolean>(false);
