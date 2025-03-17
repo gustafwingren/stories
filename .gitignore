@@ -485,3 +485,9 @@ $RECYCLE.BIN/
 
 src/Web/appsettings.Development.json
 *.http
+
+# Environment variables
+.env
+
+# Keep the example file
+!.env.example

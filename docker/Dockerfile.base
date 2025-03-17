@@ -1,0 +1,54 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+
+WORKDIR /src
+
+RUN dotnet tool install -g dotnet-ef --version 9.0.1
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+RUN apt-get update && apt-get install software-properties-common -y
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | tee /etc/apt/trusted.gpg.d/microsoft.asc
+RUN curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | tee /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y mssql-tools18 unixodbc-dev
+RUN echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bash_profile
+RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh
+RUN chmod +x ./dotnet-install.sh
+RUN ./dotnet-install.sh --channel 9.0 --install-dir /usr/share/dotnet
+RUN dotnet tool install -g microsoft.sqlpackage
+
+# Copy NuGet config files first (for layer caching)
+COPY ["src/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+
+COPY ["src/Infrastructure/packages.lock.json", "Infrastructure/"]
+COPY ["src/Application/Application.csproj", "Application/"]
+COPY ["src/Application/packages.lock.json", "Application/"]
+COPY ["src/Core/Core.csproj", "Core/"]
+COPY ["src/Core/packages.lock.json", "Core/"]
+COPY ["src/Shared/Shared.csproj", "Shared/"]
+COPY ["src/Shared/packages.lock.json", "Shared/"]
+
+ARG NUGET_PACKAGES
+ENV NUGET_PACKAGES=${NUGET_PACKAGES}
+
+# Create NuGet package cache directory and restore packages
+RUN  \
+    --mount=type=cache,id=nuget,target=${NUGET_PACKAGES} \
+    dotnet restore "Infrastructure/Infrastructure.csproj" --locked-mode --lock-file-path Infrastructure/packages.lock.json \
+    && dotnet restore "Application/Application.csproj" --locked-mode --lock-file-path Application/packages.lock.json \
+    && dotnet restore "Core/Core.csproj" --locked-mode --lock-file-path Core/packages.lock.json \
+    && dotnet restore "Shared/Shared.csproj" --locked-mode --lock-file-path Shared/packages.lock.json
+
+COPY ["src/Shared/", "Shared/"]
+RUN --mount=type=cache,id=nuget,target=${NUGET_PACKAGES} \
+    dotnet build "Shared/Shared.csproj" -c Release --no-restore
+
+# Copy the source code
+COPY ["src/Infrastructure/", "Infrastructure/"]
+RUN --mount=type=cache,id=nuget,target=${NUGET_PACKAGES} \
+    dotnet build "Infrastructure/Infrastructure.csproj" -c Release --no-restore
+
+COPY ["src/Application/", "Application/"]
+RUN --mount=type=cache,id=nuget,target=${NUGET_PACKAGES} \
+    dotnet build "Application/Application.csproj" -c Release --no-restore
+
+COPY ["src/Core/", "Core/"]
+RUN --mount=type=cache,id=nuget,target=${NUGET_PACKAGES} \
+    dotnet build "Core/Core.csproj" -c Release --no-restore
