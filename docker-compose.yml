@@ -1,0 +1,75 @@
+services:
+  # Base builder image
+  Builder:
+    image: stories-base:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.base
+      args:
+        NUGET_PACKAGES: /root/.nuget/packages
+    networks:
+      - default
+
+  # SQL Server container
+  Db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SQL_SA_PASSWORD}
+    ports:
+      - "1434:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - stories-network
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "${SQL_SA_PASSWORD}" -Q "SELECT 1" -b
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Database initialization container
+  Init:
+    image: stories.init:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.db-init
+    depends_on:
+      Db:
+        condition: service_healthy
+      Builder:
+        condition: service_completed_successfully
+    environment:
+      - SA_PASSWORD=${SQL_SA_PASSWORD}
+    networks:
+      - stories-network
+
+  # Web API container
+  Api:
+    image: stories.api:latest
+    build:
+      context: .
+      dockerfile: src/Web/Dockerfile
+    depends_on:
+      Db:
+        condition: service_healthy
+      Init:
+        condition: service_completed_successfully
+      Builder:
+        condition: service_completed_successfully
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=${STORIES_DB_CONNECTION_STRING}
+    ports:
+      - "6000:8080"
+      - "6001:8081"
+    networks:
+      - stories-network
+
+networks:
+  stories-network:
+    driver: bridge
+
+volumes:
+  sqlserver_data:
+    driver: local

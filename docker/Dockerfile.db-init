@@ -1,0 +1,7 @@
+FROM stories-base AS build
+
+WORKDIR /app
+COPY ["docker/init-db.sh", "./"]
+RUN chmod +x ./init-db.sh
+
+ENTRYPOINT ["./init-db.sh"]
